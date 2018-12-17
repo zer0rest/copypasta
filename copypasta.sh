@@ -16,37 +16,34 @@ TYPE=$(xclip -selection clipboard -t TARGETS -o | grep -m 1 -o -e ^$TEXTFILETYPE
 if [ "$TYPE" = $TEXTFILETYPE ];
 then
     # Paste the image or text file to a file at $LOCALBASEDIR
-    xclip -selection clipboard -o > "$LOCALBASEDIR/fornow"
+    xclip -selection clipboard -t $TEXTFILETYPE -o > "$LOCALBASEDIR/fornow"
+    # Create the SHA1 hash of the file and then calculate the base64 of it
+    BASE64HASH=$(cat $LOCALBASEDIR/fornow | sha256sum | base64)
 
-    # Create the SHA1 hash of the file
-    SHA1SUM=$(sha1sum $LOCALBASEDIR/fornow | awk '{printf $1}')
+    # Trunkate the base64 string to the first 5 characters
+    TBASE64="$(echo $BASE64HASH | cut -c-5)"
 
-    # Trunkate the hash to the first 5 characters
-    THASH="$(echo $SHA1SUM | cut -c-5)"
-
-    # Set the new filename based on the trunkated hash
-    HASHFILENAME="$THASH"
-
+    # Set the new filename based on the base64 string.
+    FILENAME="$TBASE64"
     # Rename the file
-    mv "$LOCALBASEDIR/fornow" "$LOCALBASEDIR/$HASHFILENAME"
-
+    mv "$LOCALBASEDIR/fornow" "$LOCALBASEDIR/$FILENAME"
+    
 # If that's not the case check if input pasted is image
 elif [ "$TYPE" = $IMAGEFILETYPE ];
 then
     # Paste the image or text file to a file at $LOCALBASEDIR
     xclip -selection clipboard -t $IMAGEFILETYPE -o > "$LOCALBASEDIR/fornow.png"
+    # Create the SHA1 hash of the file and then calculate the base64 of it.
+    BASE64HASH=$(cat $LOCALBASEDIR/fornow.png | sha256sum | base64)
 
-    # Create the SHA1 hash of the file
-    SHA1SUM=$(sha1sum $LOCALBASEDIR/fornow.png | awk '{printf $1}')
+    # Trunkate the base64 string to the first 5 characters
+    TBASE64="$(echo $BASE64HASH | cut -c-5)"
 
-    # Trunkate the hash to the first 5 characters
-    THASH="$(echo $SHA1SUM | cut -c-5)"
-
-    # Set the new filename based on the trunkated hash
-    HASHFILENAME="$THASH.png"
+    # Set the new filename based on the base64 string
+    FILENAME="$TBASE64.png"
 
     # Rename the file
-    mv "$LOCALBASEDIR/fornow.png" "$LOCALBASEDIR/$HASHFILENAME"
+    mv "$LOCALBASEDIR/fornow.png" "$LOCALBASEDIR/$FILENAME"
 
 # If that's not the case either inform the user and exit
 else
@@ -55,14 +52,14 @@ else
     exit
 fi
 # scp the file into the remote server
-scp "$LOCALBASEDIR/$HASHFILENAME" "$HOST:$REMOTEBASEDIR/"
+scp "$LOCALBASEDIR/$FILENAME" "$HOST:$REMOTEBASEDIR/"
 # echo "$?"
     # Check if scp exited with status code 1. If that's the case, it failed so notify the user.
     if [ $? -eq 0 ]; then 
         echo "succeeded"
         # Add the link into the clipboard
-        echo "https://$URL/$HASHFILENAME" | xclip -selection clipboard
-        notify-send "Copied into clipboard: https://$URL/$HASHFILENAME" -a "Copypasta"
+        echo "https://$URL/$FILENAME" | xclip -selection clipboard
+        notify-send "Copied into clipboard: https://$URL/$FILENAME" -a "Copypasta"
     else
         echo "failed"
         notify-send "Failed to upload the paste" -a "Copypasta"
