@@ -59,7 +59,7 @@ scp "$LOCALBASEDIR/$HASHFILENAME" "$HOST:$REMOTEBASEDIR/"
 # echo "$?"
     # Check if scp exited with status code 1. If that's the case, it failed so notify the user.
     if [ $? -eq 0 ]; then 
-        echo "succeded"
+        echo "succeeded"
         # Add the link into the clipboard
         echo "https://$URL/$HASHFILENAME" | xclip -selection clipboard
         notify-send "Copied into clipboard: https://$URL/$HASHFILENAME" -a "Copypasta"
