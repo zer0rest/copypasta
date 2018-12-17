@@ -1,12 +1,7 @@
 #!/bin/bash
 
-#Define variables
-URL="s.zer0rest.net"
-HOST="zer0rest.net"
-LOCALBASEDIR="/tmp"
-REMOTEBASEDIR="/home/zer0rest/s.zer0rest.net"
-TEXTFILETYPE="text/plain"
-IMAGEFILETYPE="image/png"
+#Include file where server parameters are defined
+source parameters.sh
 
 #Assign the pasted file type to a variable
 TYPE=$(xclip -selection clipboard -t TARGETS -o | grep -m 1 -o -e ^$TEXTFILETYPE -e ^$IMAGEFILETYPE)
