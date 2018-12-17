@@ -15,19 +15,19 @@ TYPE=$(xclip -selection clipboard -t TARGETS -o | grep -m 1 -o -e ^$TEXTFILETYPE
 if [ "$TYPE" = $TEXTFILETYPE ];
 then
     #Paste the image or text file to a file at $LOCALBASEDIR
-    xclip -selection clipboard -o > "$LOCALBASEDIR/fornow.txt"
+    xclip -selection clipboard -o > "$LOCALBASEDIR/fornow"
 
     # #Create the SHA1 hash of the file
-    SHA1SUM=$(sha1sum /tmp/fornow.txt | awk '{printf $1}')
+    SHA1SUM=$(sha1sum /tmp/fornow | awk '{printf $1}')
 
     # #Trunkate the hash to the first 5 characters
     THASH="$(echo $SHA1SUM | cut -c-5)"
 
     # #Set the new filename based on the trunkated hash
-    HASHFILENAME="$THASH.txt"
+    HASHFILENAME="$THASH"
 
     # #Rename the file
-    mv "$LOCALBASEDIR/fornow.txt" "$LOCALBASEDIR/$HASHFILENAME"
+    mv "$LOCALBASEDIR/fornow" "$LOCALBASEDIR/$HASHFILENAME"
 
 # If that's not the case check if input pasted is image
 elif [ "$TYPE" = $IMAGEFILETYPE ];
@@ -49,9 +49,9 @@ then
 
 # If that's not the case either inform the user and exit
 else
-echo "No supported file type was copied, exiting."
-notify-send -a "Copypasta" "No supported file type was copied"
-exit
+    echo "No supported file type was copied, exiting."
+    notify-send -a "Copypasta" "No supported file type was copied"
+    exit
 fi
     # #scp the file into the remote server
     scp "$LOCALBASEDIR/$HASHFILENAME" "$HOST:$REMOTEBASEDIR/"
