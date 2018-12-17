@@ -5,8 +5,20 @@ Copypasta (_wordplay between paste and pasta i.e. spaghetti_) is a pastebin/imgu
 
 
 ## Setting Up
-**TODO:** Add configuration steps.
+**TODO:** Add server configuration steps.
 
+ * Create a `parameters.sh` file where server parameters will be stored. The file has to follow the following pattern:
+
+ ```bash
+ #Define variables
+URL="<Insert domain that will be used by the service here>"
+HOST="<Insert hostname here>"
+LOCALBASEDIR="/tmp"
+REMOTEBASEDIR="/home/zer0rest/s.zer0rest.net"
+TEXTFILETYPE="text/plain"
+IMAGEFILETYPE="image/png"
+```
+ 
 ## Keyboard Shortcut
 Gnome (my preferred DE) offers a way to execute bash commands if you press a keyboard shortcut. This comes handy when you want to invoke the script without having to manually open a terminal and execute it. For example, I have it set to run when I press `Ctrl + Alt + P`. Most other Desktop Environments offer similar functionality.
 
