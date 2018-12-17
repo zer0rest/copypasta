@@ -19,7 +19,7 @@ then
     xclip -selection clipboard -o > "$LOCALBASEDIR/fornow"
 
     # Create the SHA1 hash of the file
-    SHA1SUM=$(sha1sum /tmp/fornow | awk '{printf $1}')
+    SHA1SUM=$(sha1sum $LOCALBASEDIR/fornow | awk '{printf $1}')
 
     # Trunkate the hash to the first 5 characters
     THASH="$(echo $SHA1SUM | cut -c-5)"
@@ -37,7 +37,7 @@ then
     xclip -selection clipboard -t $IMAGEFILETYPE -o > "$LOCALBASEDIR/fornow.png"
 
     # Create the SHA1 hash of the file
-    SHA1SUM=$(sha1sum /tmp/fornow.png | awk '{printf $1}')
+    SHA1SUM=$(sha1sum $LOCALBASEDIR/fornow.png | awk '{printf $1}')
 
     # Trunkate the hash to the first 5 characters
     THASH="$(echo $SHA1SUM | cut -c-5)"
